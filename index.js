@@ -1,21 +1,30 @@
-const jsonServer = require("json-server");
-const cors = require("cors"); // Import the cors middleware
+require("dotenv").config();
+const express = require("express");
+const cors = require("cors");
+const mongoose = require("mongoose");
+const userRoutes = require("./src/routes/userRoutes");
+const roleRoutes = require("./src/routes/roleRoutes");
 
-const server = jsonServer.create();
-const router = jsonServer.router("db.json");
-const middlewares = jsonServer.defaults();
-const port = process.env.PORT || 8080;
+const app = express();
+const PORT = process.env.PORT || 3001;
 
-// Configure CORS to allow all origins
-server.use(cors());
+// Middleware
+app.use(cors());
+app.use(express.json());
 
-// Use default middlewares (logging, static files, etc.)
-server.use(middlewares);
+// MongoDB Connection
+mongoose
+  .connect(process.env.MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => console.log("Connected to MongoDB"))
+  .catch((err) => console.error("MongoDB connection error:", err));
 
-// Use the JSON Server router
-server.use(router);
+// Routes
+app.use("/users", userRoutes);
+app.use("/roles", roleRoutes);
 
-// Start the server
-server.listen(port, () => {
-  console.log(`JSON Server is running on port ${port}`);
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
