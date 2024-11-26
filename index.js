@@ -1,4 +1,4 @@
-require("dotenv").config();
+
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
@@ -7,7 +7,7 @@ const roleRoutes = require("./src/routes/roleRoutes");
 
 const app = express();
 const PORT = process.env.PORT || 3001;
-
+require("dotenv").config();
 // Middleware
 app.use(cors());
 app.use(express.json());
